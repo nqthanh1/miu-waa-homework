@@ -10,6 +10,5 @@ public interface PostService {
     public void savePost(PostDto post);
     public void deletePost(long id);
     public void updatePost(long id, PostDto post);
-
     public List<PostDto> searchPost(String keyword);
 }

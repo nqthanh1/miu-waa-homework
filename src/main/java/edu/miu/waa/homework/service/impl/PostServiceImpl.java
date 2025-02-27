@@ -1,9 +1,11 @@
 package edu.miu.waa.homework.service.impl;
 
 import edu.miu.waa.homework.entity.Post;
+import edu.miu.waa.homework.entity.User;
 import edu.miu.waa.homework.entity.dto.PostDto;
 import edu.miu.waa.homework.helper.ListMapper;
 import edu.miu.waa.homework.repo.PostRepository;
+import edu.miu.waa.homework.repo.UserRepository;
 import edu.miu.waa.homework.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -11,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepo;
+    private final UserRepository userRepo;
 
     @Autowired
     ModelMapper modelMapper;
@@ -37,7 +39,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void savePost(PostDto post) {
-         postRepo.save(modelMapper.map(post,Post.class));
+        User postedBy = userRepo.findById(post.getPostedById());
+        Post newPost = modelMapper.map(post,Post.class);
+        newPost.setPostedBy(postedBy);
+         postRepo.save(newPost);
     }
 
     @Override
@@ -47,14 +52,15 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void updatePost(long id, PostDto post) {
-        postRepo.update(id,modelMapper.map(post,Post.class));
+        postRepo.save(modelMapper.map(post,Post.class));
     }
 
     @Override
     public List<PostDto> searchPost(String keyword) {
-        List<Post> posts = postRepo.search(keyword.toLowerCase(Locale.ROOT));
+        List<Post> posts = postRepo.findAll();
         return listMapper.mapList(posts,new PostDto());
     }
+
 
 
 }

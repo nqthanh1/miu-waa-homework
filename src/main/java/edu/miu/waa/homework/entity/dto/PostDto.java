@@ -12,7 +12,7 @@ public class PostDto {
     private String title;
     private String content;
     private String author;
-
+    private long postedById;
     public PostDto() {
     }
 }

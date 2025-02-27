@@ -37,17 +37,17 @@ public class PostController {
     // POST /api/posts
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public void save(@RequestBody PostDto post) {
+    public void addPost(@RequestBody PostDto post) {
         postService.savePost(post);
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable("id") long id, @RequestBody PostDto post) {
+    public void updatePost(@PathVariable("id") long id, @RequestBody PostDto post) {
         postService.updatePost(id, post);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") long id) {
+    public void deletePost(@PathVariable("id") long id) {
         postService.deletePost(id);
     }
 
