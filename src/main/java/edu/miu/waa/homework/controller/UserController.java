@@ -1,11 +1,14 @@
 package edu.miu.waa.homework.controller;
 
+import edu.miu.waa.homework.entity.Comment;
 import edu.miu.waa.homework.entity.User;
 import edu.miu.waa.homework.entity.dto.PostDto;
 import edu.miu.waa.homework.entity.dto.UserDto;
 import edu.miu.waa.homework.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,13 +42,41 @@ public class UserController {
 
     //get posts by user id
     @GetMapping("/{id}/posts")
-    public List<PostDto> getPostsByUserId(@PathVariable("id") long id){
-        return userService.getPostsByUserId(id);
+    public ResponseEntity<List<PostDto>> getPostsByUserId(@PathVariable("id") long id) {
+        try {
+            List<PostDto> posts = userService.getPostsByUserId(id);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/user-many-posts")
     public List<UserDto> usersHaveManyPosts() {
-        return userService.usersHaveManyPosts();
+        return userService.usersHaveNPosts(2);
     }
+
+    @GetMapping("/user-n-posts/{n}")
+    public List<UserDto> usersHaveNPosts(@PathVariable("n") int n) {
+        return userService.usersHaveNPosts(n);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/posts/title") // GET - localhost:8080/api/users/posts/title?title=Post1
+    public List<UserDto> findUsersByPostTitle(@RequestParam("title") String title) {
+        return userService.findUsersByPostTitle(title);
+    }
+
+
+    @GetMapping("/{userId}/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<Comment> getCommentsByUserIdAndPostIdAndCommentId(@PathVariable("userId") long userId, @PathVariable("postId") long postId, @PathVariable("commentId") long commentId) {
+        try {
+            Comment comment = userService.getCommentsByUserIdAndPostIdAndCommentId(userId, postId, commentId);
+            return new ResponseEntity<>(comment, HttpStatus.OK);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }

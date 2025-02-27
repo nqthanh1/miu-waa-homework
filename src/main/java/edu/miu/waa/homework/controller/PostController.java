@@ -1,7 +1,10 @@
 package edu.miu.waa.homework.controller;
 
+import edu.miu.waa.homework.entity.Comment;
 import edu.miu.waa.homework.entity.dto.PostDto;
+import edu.miu.waa.homework.service.CommentService;
 import edu.miu.waa.homework.service.PostService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +18,12 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final CommentService commentService;
 
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostService postService, CommentService commentService) {
         this.postService = postService;
+        this.commentService = commentService;
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -55,5 +60,17 @@ public class PostController {
     @GetMapping("/search")
     public List<PostDto> search(@RequestParam("keyword") String keyword) {
         return postService.searchPost(keyword);
+    }
+
+    // GET /api/posts/1/comments
+    @GetMapping("/{postId}/comments")
+    public List<Comment> getAllComments(@PathVariable("postId") long postId) {
+        return commentService.getAllComments(postId);
+    }
+
+    // POST /api/posts/1/comments
+    @PostMapping("/{postId}/comments")
+    public void addComment(@PathVariable("postId") long postId, @RequestBody Comment comment) {
+        commentService.saveComment(postId, comment);
     }
 }

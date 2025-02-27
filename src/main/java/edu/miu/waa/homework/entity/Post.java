@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,6 +26,12 @@ public class Post {
     @JoinColumn(name = "posted_by_id")
     @JsonBackReference
     User postedBy;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
+
+    List<Comment> comments;
+
     public Post() {
     }
 }

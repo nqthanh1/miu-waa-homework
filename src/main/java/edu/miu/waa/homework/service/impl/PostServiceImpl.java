@@ -39,7 +39,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void savePost(PostDto post) {
-        User postedBy = userRepo.findById(post.getPostedById());
+        User postedBy = userRepo.findById(post.getPostedById()).orElse(null);
+        if(postedBy == null) return;
+
         Post newPost = modelMapper.map(post,Post.class);
         newPost.setPostedBy(postedBy);
          postRepo.save(newPost);
@@ -57,7 +59,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDto> searchPost(String keyword) {
-        List<Post> posts = postRepo.findAll();
+        List<Post> posts = postRepo.search(keyword);
         return listMapper.mapList(posts,new PostDto());
     }
 

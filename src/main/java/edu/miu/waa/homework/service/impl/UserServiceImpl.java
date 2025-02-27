@@ -1,5 +1,6 @@
 package edu.miu.waa.homework.service.impl;
 
+import edu.miu.waa.homework.entity.Comment;
 import edu.miu.waa.homework.entity.Post;
 import edu.miu.waa.homework.entity.User;
 import edu.miu.waa.homework.entity.dto.PostDto;
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(long id, User user) {
         //update existing user
-        User existingUser = userRepo.findById(id);
+        User existingUser = userRepo.findById(id).orElse(null );
         if (existingUser != null) {
             existingUser.setName(user.getName());
             userRepo.save(existingUser);
@@ -62,13 +63,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<PostDto> getPostsByUserId(long id) {
-        List<Post> posts = userRepo.findById(id).getPosts();
+        User user = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        List<Post> posts = user.getPosts();
         return listMapper.mapList(posts, new PostDto());
     }
 
     @Override
-    public List<UserDto> usersHaveManyPosts() {
-        List<User> users = userRepo.findUsersWithPosts(2);
+    public List<UserDto> usersHaveNPosts(int n) {
+        List<User> users = userRepo.findUsersWithPosts(n);
         return listMapper.mapList(users, new UserDto());
+    }
+
+    @Override
+    public List<UserDto> findUsersByPostTitle(String title) {
+        return listMapper.mapList(userRepo.findUsersByPostTitle("%" + title + "%"), new UserDto());
+    }
+
+    @Override
+    public Comment getCommentsByUserIdAndPostIdAndCommentId(long userId, long postId, long commentId) {
+        return userRepo.findCommentsByIdAndPostIdAndCommentId(userId, postId, commentId);
     }
 }

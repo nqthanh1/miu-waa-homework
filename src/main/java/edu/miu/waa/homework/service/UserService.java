@@ -1,5 +1,6 @@
 package edu.miu.waa.homework.service;
 
+import edu.miu.waa.homework.entity.Comment;
 import edu.miu.waa.homework.entity.User;
 import edu.miu.waa.homework.entity.dto.PostDto;
 import edu.miu.waa.homework.entity.dto.UserDto;
@@ -13,5 +14,7 @@ public interface UserService {
     public void deleteUser(long id);
     public void updateUser(long id, User user);
     public List<PostDto> getPostsByUserId(long id);
-    public List<UserDto> usersHaveManyPosts();
+    public List<UserDto> usersHaveNPosts(int n);
+    List<UserDto> findUsersByPostTitle(String title);
+    public Comment getCommentsByUserIdAndPostIdAndCommentId(long userId, long postId, long commentId);
 }
