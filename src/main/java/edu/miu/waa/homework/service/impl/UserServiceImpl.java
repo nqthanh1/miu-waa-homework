@@ -1,5 +1,6 @@
 package edu.miu.waa.homework.service.impl;
 
+import edu.miu.waa.homework.aspect.annotation.ExecutionTime;
 import edu.miu.waa.homework.entity.Comment;
 import edu.miu.waa.homework.entity.Post;
 import edu.miu.waa.homework.entity.User;
@@ -34,8 +35,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @ExecutionTime
     public UserDto getUserById(long id) {
-        return modelMapper.map(userRepo.findById(id), UserDto.class);
+        return modelMapper.map(userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found")), UserDto.class);
     }
 
     @Override
@@ -53,7 +55,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(long id, User user) {
         //update existing user
-        User existingUser = userRepo.findById(id).orElse(null );
+        User existingUser = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         if (existingUser != null) {
             existingUser.setName(user.getName());
             userRepo.save(existingUser);
