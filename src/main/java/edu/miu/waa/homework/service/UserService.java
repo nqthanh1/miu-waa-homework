@@ -1,9 +1,10 @@
 package edu.miu.waa.homework.service;
 
 import edu.miu.waa.homework.entity.Comment;
-import edu.miu.waa.homework.entity.User;
+import edu.miu.waa.homework.security.entity.User;
 import edu.miu.waa.homework.entity.dto.PostDto;
 import edu.miu.waa.homework.entity.dto.UserDto;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface UserService {
     public List<UserDto> usersHaveNPosts(int n);
     List<UserDto> findUsersByPostTitle(String title);
     public Comment getCommentsByUserIdAndPostIdAndCommentId(long userId, long postId, long commentId);
+
+    public User getUserByUsername(String username);
 }

@@ -3,7 +3,7 @@ package edu.miu.waa.homework.service.impl;
 import edu.miu.waa.homework.aspect.annotation.ExecutionTime;
 import edu.miu.waa.homework.entity.Comment;
 import edu.miu.waa.homework.entity.Post;
-import edu.miu.waa.homework.entity.User;
+import edu.miu.waa.homework.security.entity.User;
 import edu.miu.waa.homework.entity.dto.PostDto;
 import edu.miu.waa.homework.entity.dto.UserDto;
 import edu.miu.waa.homework.helper.ListMapper;
@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
         //update existing user
         User existingUser = userRepo.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         if (existingUser != null) {
-            existingUser.setName(user.getName());
+            existingUser.setUsername(user.getUsername());
             userRepo.save(existingUser);
         }
 
@@ -84,5 +84,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public Comment getCommentsByUserIdAndPostIdAndCommentId(long userId, long postId, long commentId) {
         return userRepo.findCommentsByIdAndPostIdAndCommentId(userId, postId, commentId);
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepo.findByUsername(username);
     }
 }

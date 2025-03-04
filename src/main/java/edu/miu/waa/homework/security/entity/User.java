@@ -1,7 +1,7 @@
-package edu.miu.waa.homework.entity;
+package edu.miu.waa.homework.security.entity;
 
+import edu.miu.waa.homework.entity.Post;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Fetch;
@@ -17,9 +17,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    String name;
-
+    String username;
+    String password;
     @OneToMany(mappedBy = "postedBy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     List<Post> posts;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable
+    private List<Role> roles;
 }

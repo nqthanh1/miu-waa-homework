@@ -1,7 +1,7 @@
 package edu.miu.waa.homework.service.impl;
 
 import edu.miu.waa.homework.entity.Post;
-import edu.miu.waa.homework.entity.User;
+import edu.miu.waa.homework.security.entity.User;
 import edu.miu.waa.homework.entity.dto.PostDto;
 import edu.miu.waa.homework.helper.ListMapper;
 import edu.miu.waa.homework.repo.PostRepository;

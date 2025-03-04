@@ -1,11 +1,11 @@
 package edu.miu.waa.homework.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import edu.miu.waa.homework.security.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 

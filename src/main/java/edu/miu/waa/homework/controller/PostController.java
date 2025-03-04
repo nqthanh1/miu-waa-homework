@@ -2,12 +2,18 @@ package edu.miu.waa.homework.controller;
 
 import edu.miu.waa.homework.entity.Comment;
 import edu.miu.waa.homework.entity.dto.PostDto;
+import edu.miu.waa.homework.security.entity.User;
+import edu.miu.waa.homework.security.util.JwtUtil;
 import edu.miu.waa.homework.service.CommentService;
 import edu.miu.waa.homework.service.PostService;
+import edu.miu.waa.homework.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,11 +25,15 @@ public class PostController {
 
     private final PostService postService;
     private final CommentService commentService;
+    private final JwtUtil jwtUtil;
+    private final UserService userService;
 
     @Autowired
-    public PostController(PostService postService, CommentService commentService) {
+    public PostController(PostService postService, CommentService commentService,JwtUtil jwtUtil,UserService userService) {
         this.postService = postService;
         this.commentService = commentService;
+        this.jwtUtil = jwtUtil;
+        this.userService = userService;
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -43,7 +53,14 @@ public class PostController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public void addPost(@RequestBody PostDto post) {
-        postService.savePost(post);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.getUserByUsername(username);
+        if (user != null) {
+            // Set authenticated username to the post
+            post.setPostedById(user.getId());
+            postService.savePost(post);
+        }
     }
 
     @PutMapping("/{id}")

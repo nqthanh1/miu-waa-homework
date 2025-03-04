@@ -1,21 +1,22 @@
 package edu.miu.waa.homework.controller;
 
 import edu.miu.waa.homework.entity.Comment;
-import edu.miu.waa.homework.entity.User;
+import edu.miu.waa.homework.security.entity.User;
 import edu.miu.waa.homework.entity.dto.PostDto;
 import edu.miu.waa.homework.entity.dto.UserDto;
 import edu.miu.waa.homework.service.UserService;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/users")
+@RequestMapping("/api/admin/users")
+@PreAuthorize("hasRole('ADMIN')")
 public class UserController {
 
     private final UserService userService;
